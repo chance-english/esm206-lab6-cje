@@ -7,4 +7,67 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+
+library(tidyverse)
+library(ggplot2)
+library(palmerpenguins)
+library(broom)
+library(equatiomatic)
+
+
 ```
+
+
+
+## Example of a rank-based test 
+
+
+We'll make out own samples using pseudo random number generator 
+
+
+```{r}
+
+set.seed(1414) # sets a starting point from which we ask it to return sample values. Allows comparrison among other people
+
+gp1 <- sample.int(20, size = 15, replace = TRUE)
+
+set.seed(1424)
+
+gp2 <- sample.int(30, size = 15, replace = TRUE)
+
+gp_df <- data_frame(gp1, gp2)
+
+gp_df_tidy <- gather(gp_df, "gp", "random_number")
+```
+
+
+```{r}
+
+hist(gp
+
+```
+
+
+```{r}
+
+t.test(gp1, gp2)
+
+```
+
+Conclusion: The probability of finding at least out different means for gp1 and gp2 if they were drawn from the same population is 19.8%. We fail to reject the null hypothesis. There is no significant difference between group 1 and group 2.
+
+Now let's compare thus outcome to a rank based test. 
+
+
+## Mann Whitney U unpaired rank-based test 
+
+```{r}
+ 
+mwu <- wilcox.test(gp1, gp2) # it we have ties, it will make an approximation in order to compute ranks. 
+
+
+mwu
+```
+
+If these samples were drawn from populations with the same ranks (median) the probability of finding two samples with ranks *at least as different* as those in our samples is 0.28. We fail to reject the null hypothesis. There is no significant difference in ranks between group 1 and group 2. Median scores for group 1 (M = 14) and group 2 (M = 2) did not differ significantly (Mann Whitney U test : U(df) = 86, p = 0.28)
