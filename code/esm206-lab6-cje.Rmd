@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 
 library(tidyverse)
@@ -42,11 +42,6 @@ gp_df_tidy <- gather(gp_df, "gp", "random_number")
 ```
 
 
-```{r}
-
-hist(gp
-
-```
 
 
 ```{r}
@@ -64,10 +59,75 @@ Now let's compare thus outcome to a rank based test.
 
 ```{r}
  
-mwu <- wilcox.test(gp1, gp2) # it we have ties, it will make an approximation in order to compute ranks. 
+mwu <- wilcox.test(gp1, gp2)
 
-
-mwu
 ```
 
 If these samples were drawn from populations with the same ranks (median) the probability of finding two samples with ranks *at least as different* as those in our samples is 0.28. We fail to reject the null hypothesis. There is no significant difference in ranks between group 1 and group 2. Median scores for group 1 (M = 14) and group 2 (M = 2) did not differ significantly (Mann Whitney U test : U(df) = 86, p = 0.28)
+
+
+
+## Linear Regression 
+
+Simple linear regression: single dependent variable, a single dependent independent variable 
+
+
+```{r, include = FALSE}
+
+penguins %>% ggplot(aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() +
+  geom_abline(slope = 49.686, intercept = -5780.831)
+
+
+```
+
+Find a linear regression model using ordinary least squares describing the relationship between flipper length and body mass for these penguins 
+
+
+3 Pieces
+
+- What type of model?
+- What is the relationshio to model (DV - IV's)
+- Where is the data that is used to create this model?
+
+
+```{r}
+
+penguin_lm <- lm(data = penguins, body_mass_g ~ flipper_length_mm)
+
+
+
+```
+
+## Intercept would be a negative mass. All models are wrong, and extrapolation can be difficult
+
+
+
+### broom package retunrs model outputs as tidy dataframes 
+
+
+```{r}
+
+penguin_lm_tidy <- broom::tidy(penguin_lm)
+
+
+```
+
+How can I include my model equation in a report?
+
+
+
+```{r}
+extract_eq(model = penguin_lm, use_coef = TRUE)
+
+
+```
+
+
+
+```{r}
+
+plot(penguin_lm)
+
+```
+
